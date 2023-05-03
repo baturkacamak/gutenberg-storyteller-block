@@ -35,7 +35,7 @@ function storyteller_render_block($attributes)
 	// Fetch a single post from each selected category
 	foreach ($categories as $category) {
 		$posts_to_exclude = array_map(function ($post) {
-			return $post->ID;
+			return $post['post']->ID;
 		}, $posts);
 
 		$category_posts = get_posts([
@@ -54,31 +54,28 @@ function storyteller_render_block($attributes)
 
 		// Add the post to the $posts array if a post is found
 		if (!empty($category_posts)) {
-			$posts[] = $category_posts[0];
+			$posts[] = [
+					'post'        => $category_posts[0],
+					'category_id' => $category,
+			];
 		}
 	}
 
 	// Output the HTML for the block
 	ob_start();
 	?>
-	<div class="storyteller-block">
-		<div class="storyteller-grid flex space-x-6">
-			<?php foreach ($posts as $post) : ?>
-				<?php $thumbnail = get_the_post_thumbnail_url($post->ID, 'medium_large'); ?>
-				<div class='storyteller-grid-item flex flex-col items-center space-y-1'>
-					<div class='relative bg-gradient-to-tr from-yellow-400 to-fuchsia-600 p-1 rounded-full'>
-					</div>
-					<a href="<?php echo get_permalink($post->ID); ?>"
-					   class='block bg-white p-1 rounded-full transform hover:-rotate-6'>
-						<img
-								class='!h-24 w-24 rounded-full'
-								src="<?php echo esc_attr($thumbnail); ?>"
-								alt="<?php echo get_post_meta($post->ID, ' _wp_attachment_image_alt', true); ?>"
-						/>
-					</a>
+	<div class="storyteller-grid flex space-x-6">
+		<?php foreach ($posts as $post) : ?>
+			<?php $thumbnail = get_the_post_thumbnail_url($post['post']->ID, 'medium_large'); ?>
+			<div class='storyteller-grid-item flex flex-col items-center space-y-1'
+				 data-category-id="<?php echo $post['category_id']; ?>">
+				<div class="relative bg-gradient-to-tr from-yellow-400 to-fuchsia-600 p-1 rounded-full">
 				</div>
-			<?php endforeach; ?>
-		</div>
+				<a href="#" class="block bg-white p-1 rounded-full transform hover:-rotate-6">
+					<img class="!h-24 w-24 rounded-full" src="<?php echo $thumbnail; ?>"/>
+				</a>
+			</div>
+		<?php endforeach; ?>
 	</div>
 	<?php
 	return ob_get_clean();
@@ -105,11 +102,36 @@ add_action('init', 'create_block_gutenberg_storyteller_block_block_init');
 
 function storyteller_enqueue_block_assets()
 {
+	// Enqueue Swiper.js styles
+	wp_enqueue_style(
+			'swiper',
+			'https://unpkg.com/swiper/swiper-bundle.min.css'
+	);
+
+	// Enqueue your block styles
 	wp_enqueue_style(
 			'storyteller-block-style',
 			plugins_url('build/output.css', __FILE__),
 			[],
 			filemtime(plugin_dir_path(__FILE__) . 'build/output.css')
+	);
+
+	// Enqueue Swiper.js script
+	wp_enqueue_script(
+			'swiper',
+			'https://unpkg.com/swiper/swiper-bundle.min.js',
+			[],
+			null,
+			true
+	);
+
+	// Enqueue your custom script
+	wp_enqueue_script(
+			'storyteller-custom-script',
+			plugins_url('src/custom-script.js', __FILE__),
+			['swiper'],
+			filemtime(plugin_dir_path(__FILE__) . 'src/custom-script.js'),
+			true
 	);
 }
 
