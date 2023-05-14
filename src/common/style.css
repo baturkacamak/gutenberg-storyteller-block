@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.swiper-slide-prev .storyteller-story-container,
+.swiper-slide-next .storyteller-story-container {
+	pointer-events: none;
+}
+
+.swiper-wrapper-category > .swiper-slide-prev,
+.swiper-wrapper-category > .swiper-slide-next {
+	height: 65%;
+}
