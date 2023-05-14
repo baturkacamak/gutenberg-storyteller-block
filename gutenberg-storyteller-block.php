@@ -126,14 +126,37 @@ function storyteller_enqueue_block_assets()
 	);
 
 	// Enqueue your custom script
+//	wp_enqueue_script(
+//			'storyteller-custom-script',
+//			plugins_url('build/custom-script.js', __FILE__),
+//			['swiper'],
+//			filemtime(plugin_dir_path(__FILE__) . 'build/custom-script.js'),
+//			true
+//	);
+
+	// Enqueue your custom script
 	wp_enqueue_script(
-			'storyteller-custom-script',
-			plugins_url('src/custom-script.js', __FILE__),
+			'storyteller',
+			plugins_url('build/story-teller.js', __FILE__),
 			['swiper'],
-			filemtime(plugin_dir_path(__FILE__) . 'src/custom-script.js'),
+			filemtime(plugin_dir_path(__FILE__) . 'build/story-teller.js'),
 			true
 	);
 }
 
 add_action('enqueue_block_assets', 'storyteller_enqueue_block_assets');
 add_action('wp_enqueue_scripts', 'storyteller_enqueue_block_assets');
+
+function storyteller_add_image_sizes()
+{
+	add_image_size('instagram-story', 360, 640, true);
+}
+
+add_action('after_setup_theme', 'storyteller_add_image_sizes');
+
+function hide_admin_bar_filter($show)
+{
+	return false;
+}
+
+add_filter('show_admin_bar', 'hide_admin_bar_filter');

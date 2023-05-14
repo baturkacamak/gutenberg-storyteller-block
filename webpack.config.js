@@ -6,6 +6,11 @@ const tailwindcss = require('tailwindcss');
 
 module.exports = {
 	...defaultConfig,
+	entry: {
+		...defaultConfig.entry,
+		'custom-script': './src/public/custom-script.js',
+		'story-teller': './src/public/StoryTeller.js',
+	},
 	module: {
 		...defaultConfig.module,
 		rules: [

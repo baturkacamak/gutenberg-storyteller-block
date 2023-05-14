@@ -1,18 +1,10 @@
-import './style.css';
+import '../common/style.css';
 import {registerBlockType} from '@wordpress/blocks';
 import {__} from '@wordpress/i18n';
 import {InspectorControls, useBlockProps} from '@wordpress/block-editor';
 import {PanelBody, SelectControl, DateTimePicker} from '@wordpress/components';
 import {useState, useEffect} from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-
-// Move the Story class definition here
-class Story {
-	// ...
-}
-
-// Rest of the imports and code
-
 
 registerBlockType('create-block/gutenberg-storyteller-block', {
 	apiVersion: 2,
